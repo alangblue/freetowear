@@ -35,7 +35,7 @@ target/
 Thumbs.db
 
 # Local notes
-note.txt
+note.md
 DatabaseConfig.java
-application.properties
+.env
 FreeToWearApplicationTests.java
