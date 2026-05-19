@@ -23,7 +23,7 @@ public class CategoryService {
         categoryRepository.save(category);
     }
 
-    public void updateCategory(Integer id, UpdateCategoryRequest request) {
+    public void updateCategory(String id, UpdateCategoryRequest request) {
         categoryRepository.findById(id).ifPresent(category -> {
             if (request.getName() != null && !request.getName().isEmpty())
                 category.setName(request.getName());
@@ -40,7 +40,7 @@ public class CategoryService {
                 .collect(Collectors.toList());
     }
 
-    public Optional<CategoryResponse> getCategoryById(Integer id) {
+    public Optional<CategoryResponse> getCategoryById(String id) {
         return categoryRepository.findById(id)
                 .map(CategoryResponse::new);
     }

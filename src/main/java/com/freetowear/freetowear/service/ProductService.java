@@ -6,23 +6,17 @@ import com.freetowear.freetowear.dto.response.product.ProductResponse;
 import com.freetowear.freetowear.entity.Category;
 import com.freetowear.freetowear.entity.Product;
 import com.freetowear.freetowear.entity.ProductVariation;
+import com.freetowear.freetowear.infra.CloudinaryService;
 import com.freetowear.freetowear.repository.CategoryRepository;
 import com.freetowear.freetowear.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
-
-    private final String UPLOAD_DIR = "src/main/resources/static/uploads/";
 
     @Autowired
     private ProductRepository productRepository;
@@ -30,17 +24,20 @@ public class ProductService {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    @Autowired
+    private CloudinaryService cloudinaryService;
+
     public void createProduct(CreateProductRequest request) throws IOException {
         Category category = categoryRepository.findById(request.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found"));
 
-        String imagePath = saveImage(request.getImage());
+        String publicId = cloudinaryService.uploadPublic(request.getImage(), "products"); // 👈
 
         Product product = new Product();
         product.setName(request.getName());
         product.setDescription(request.getDescription());
         product.setPrice(request.getPrice());
-        product.setImageUrl(imagePath);
+        product.setImagePublicId(publicId);
         product.setCategory(category);
 
         ProductVariation variation = new ProductVariation();
@@ -50,29 +47,22 @@ public class ProductService {
         variation.setProduct(product);
 
         product.setVariations(List.of(variation));
-
         productRepository.save(product);
     }
 
     public List<ProductResponse> listProducts() {
-        return productRepository.findByActiveTrue()
-                .stream()
-                .map(ProductResponse::new)
+        List<Product> products = productRepository.findByActiveTrue();
+        System.out.println("Products found: " + products.size());
+        return products.stream()
+                .map(product -> new ProductResponse(product, cloudinaryService.buildUrl(product.getImagePublicId())))
                 .collect(Collectors.toList());
     }
 
     public ProductResponse findById(Integer id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
-        return new ProductResponse(product);
-    }
-
-    private String saveImage(MultipartFile image) throws IOException {
-        String fileName = UUID.randomUUID() + "_" + image.getOriginalFilename();
-        Path path = Paths.get(UPLOAD_DIR + fileName);
-        Files.createDirectories(path.getParent());
-        Files.write(path, image.getBytes());
-        return "uploads/" + fileName;
+        String imageUrl = cloudinaryService.buildUrl(product.getImagePublicId());
+        return new ProductResponse(product, imageUrl);
     }
 
     public void updateProduct(Integer id, UpdateProductRequest request) throws IOException {
@@ -82,7 +72,7 @@ public class ProductService {
         if (request.getName() != null) product.setName(request.getName());
         if (request.getDescription() != null) product.setDescription(request.getDescription());
         if (request.getPrice() != null) product.setPrice(request.getPrice());
-        if (request.getActive() != null) product.setActive(request.getActive()); // 👈 here
+        if (request.getActive() != null) product.setActive(request.getActive());
 
         if (request.getCategoryId() != null) {
             Category category = categoryRepository.findById(request.getCategoryId())
@@ -91,12 +81,15 @@ public class ProductService {
         }
 
         if (request.getImage() != null && !request.getImage().isEmpty()) {
-            String imagePath = saveImage(request.getImage());
-            product.setImageUrl(imagePath);
+            if (product.getImagePublicId() != null) {
+                cloudinaryService.delete(product.getImagePublicId());
+            }
+            String publicId = cloudinaryService.uploadPublic(request.getImage(), "products");
+            product.setImagePublicId(publicId);
         }
 
         if (request.getColor() != null || request.getSize() != null || request.getStock() != null) {
-            ProductVariation variation = product.getVariations().get(0); // adjust if multi-variation
+            ProductVariation variation = product.getVariations().get(0);
             if (request.getColor() != null) variation.setColor(request.getColor());
             if (request.getSize() != null) variation.setSize(request.getSize());
             if (request.getStock() != null) variation.setStock(request.getStock());

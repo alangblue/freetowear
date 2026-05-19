@@ -34,16 +34,21 @@ public class ProductController {
             @RequestParam String color,
             @RequestParam Size size,
             @RequestParam Integer stock,
-            @RequestParam Integer categoryId,
-            @RequestParam("image") MultipartFile image
+            @RequestParam String categoryId,
+            @RequestParam("image") MultipartFile image,
+            Model model
     ) {
         try {
             productService.createProduct(new CreateProductRequest(
                     name, description, price, color, size, stock, categoryId, image
             ));
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("error", e.getMessage());
+            return "product-form";
         } catch (IOException e) {
             e.printStackTrace();
-            return "redirect:/error";
+            model.addAttribute("error", "Failed to upload image, try again.");
+            return "product-form";
         }
         return "redirect:/";
     }
@@ -57,17 +62,22 @@ public class ProductController {
             @RequestParam(required = false) String color,
             @RequestParam(required = false) Size size,
             @RequestParam(required = false) Integer stock,
-            @RequestParam(required = false) Integer categoryId,
+            @RequestParam(required = false) String categoryId,
             @RequestParam(value = "image", required = false) MultipartFile image,
-            @RequestParam(required = false) Boolean active
+            @RequestParam(required = false) Boolean active,
+            Model model
     ) {
         try {
             productService.updateProduct(id, new UpdateProductRequest(
                     name, description, price, color, size, stock, categoryId, image, active
             ));
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("error", e.getMessage());
+            return "product-form";
         } catch (IOException e) {
             e.printStackTrace();
-            return "redirect:/error";
+            model.addAttribute("error", "Failed to upload image, try again.");
+            return "product-form";
         }
         return "redirect:/product/" + id;
     }

@@ -24,7 +24,7 @@ public class Product extends BaseEntity {
     private String description;
 
     @Column(length = 255)
-    private String imageUrl;
+    private String imagePublicId;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "category_id")

@@ -36,7 +36,7 @@ public class CreateProductRequest {
     private Integer stock;
 
     @NotNull
-    private Integer categoryId;
+    private String categoryId;
 
     @NotNull
     private MultipartFile image;
@@ -50,7 +50,7 @@ public class CreateProductRequest {
             String color,
             Size size,
             Integer stock,
-            Integer categoryId,
+            String categoryId,
             MultipartFile image
     ) {
         this.name = name;

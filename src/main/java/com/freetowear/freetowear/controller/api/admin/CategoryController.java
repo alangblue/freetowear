@@ -33,7 +33,7 @@ public class CategoryController {
 
     @PatchMapping("/{id}")
     public String updateCategory(
-            @PathVariable Integer id,
+            @PathVariable String id,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) Boolean active
     ) {
@@ -49,7 +49,7 @@ public class CategoryController {
 
     @GetMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<CategoryResponse> getCategoryById(@PathVariable Integer id) {
+    public ResponseEntity<CategoryResponse> getCategoryById(@PathVariable String id) {
         return categoryService.getCategoryById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
