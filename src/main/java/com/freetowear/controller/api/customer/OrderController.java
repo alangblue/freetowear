@@ -1,0 +1,90 @@
+package com.freetowear.controller.api.customer;
+
+import com.freetowear.dto.request.order.AddItemToOrderRequest;
+import com.freetowear.dto.request.order.CreateOrderRequest;
+import com.freetowear.dto.request.order.FinishOrderRequest;
+import com.freetowear.dto.response.order.OrderResponse;
+import com.freetowear.dto.response.order.OrderTrackingResponse;
+import com.freetowear.service.OrderService;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+/*
+ * OrderController — manages customer orders.
+ * POST   /order ✔
+ * POST   /order/{id}/item ✔
+ * POST   /order/{id}/cancel ✔
+ * POST   /order/{id}/finish ✔
+ * GET    /order ✔
+ * GET    /order/{id} ✔
+ * GET    /order/{id}/tracking ✔
+ * PATCH  /order/{id} ⏳
+ * PATCH  /order/{id}/item/{idItem} ⏳
+ * DELETE /order/{id} ⏳
+ * DELETE /order/{id}/item/{idItem} ⏳
+ * */
+@Controller
+@RequestMapping("/order")
+public class OrderController {
+
+    @Autowired
+    private OrderService orderService;
+
+    @PostMapping
+    public String createOrder(
+            @RequestParam String idCustomer,
+            @RequestParam String idAddress,
+            @RequestParam(required = false) String idCoupon
+    ) {
+        orderService.createOrder(new CreateOrderRequest(idCustomer, idAddress, idCoupon));
+        return "redirect:/";
+    }
+
+    @PostMapping("/{id}/item")
+    public String addItem(
+            @PathVariable String id,
+            @RequestParam String idProduct,
+            @RequestParam String idVariation,
+            @RequestParam Integer quantity
+    ) {
+        orderService.addItem(id, new AddItemToOrderRequest(idProduct, idVariation, quantity));
+        return "redirect:/";
+    }
+
+    @PostMapping("/{id}/finish")
+    public String finishOrder(
+            @PathVariable String id,
+            @Valid @ModelAttribute FinishOrderRequest request
+    ) {
+        orderService.finishOrder(id, request);
+        return "redirect:/";
+    }
+
+    @GetMapping
+    @ResponseBody
+    public List<OrderResponse> getOrders() {
+        return orderService.getOrders();
+    }
+
+    @GetMapping("/{id}")
+    @ResponseBody
+    public OrderResponse getOrderById(@PathVariable String id) {
+        return orderService.getOrderById(id);
+    }
+
+    @GetMapping("/{id}/tracking")
+    @ResponseBody
+    public OrderTrackingResponse getOrderTracking(@PathVariable String id) {
+        return orderService.getOrderTracking(id);
+    }
+
+    @PostMapping("/{id}/cancel")
+    public String cancelOrder(@PathVariable String id) {
+        orderService.cancelOrder(id);
+        return "redirect:/";
+    }
+}
