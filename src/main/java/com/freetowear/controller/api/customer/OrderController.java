@@ -10,7 +10,8 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
 import java.util.List;
 
 /*
@@ -49,9 +50,15 @@ public class OrderController {
             @PathVariable String id,
             @RequestParam String idProduct,
             @RequestParam String idVariation,
-            @RequestParam Integer quantity
+            @RequestParam Integer quantity,
+            @RequestParam(required = false) MultipartFile customerCustomization,
+            @RequestParam(required = false) String description
     ) {
-        orderService.addItem(id, new AddItemToOrderRequest(idProduct, idVariation, quantity));
+        try {
+            orderService.addItem(id, new AddItemToOrderRequest(idProduct, idVariation, quantity, customerCustomization, description));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         return "redirect:/";
     }
 

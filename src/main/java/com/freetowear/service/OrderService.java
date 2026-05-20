@@ -4,6 +4,7 @@ import com.freetowear.entity.*;
 import com.freetowear.entity.*;
 import com.freetowear.enums.PaymentStatus;
 import com.freetowear.enums.OrderStatus;
+import com.freetowear.infra.CloudinaryService;
 import com.freetowear.repository.*;
 import com.freetowear.repository.*;
 import com.freetowear.dto.request.order.AddItemToOrderRequest;
@@ -13,6 +14,7 @@ import com.freetowear.dto.response.order.OrderResponse;
 import com.freetowear.dto.response.order.OrderTrackingResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -44,6 +46,9 @@ public class OrderService {
     @Autowired
     private ProductVariationRepository variationRepository;
 
+    @Autowired
+    private CloudinaryService cloudinaryService;
+
     public void createOrder(CreateOrderRequest request) {
         Customer customer = customerRepository.findById(request.getIdCustomer())
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
@@ -74,7 +79,7 @@ public class OrderService {
         orderRepository.save(order);
     }
 
-    public void addItem(String orderId, AddItemToOrderRequest request) {
+    public void addItem(String orderId, AddItemToOrderRequest request) throws IOException {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
 
@@ -90,6 +95,20 @@ public class OrderService {
         item.setProductVariation(variation);
         item.setQuantity(request.getQuantity());
         item.setUnitPrice(product.getPrice());
+        item.setQuantity(request.getQuantity());
+        item.setUnitPrice(product.getPrice());
+        item.setSubtotal(product.getPrice().multiply(BigDecimal.valueOf(request.getQuantity()))); // 👈
+
+        if (request.getDescription() != null)
+            item.setDescription(request.getDescription());
+
+        if (request.getCustomerCustomization() != null && !request.getCustomerCustomization().isEmpty()) {
+            String privateId = cloudinaryService.uploadPrivate(
+                    request.getCustomerCustomization(),
+                    "customization"
+            );
+            item.setCustomerCustomizationId(privateId);
+        }
 
         orderItemRepository.save(item);
     }

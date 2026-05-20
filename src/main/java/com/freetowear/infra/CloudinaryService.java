@@ -32,14 +32,17 @@ public class CloudinaryService {
         return (String) result.get("public_id");
     }
 
-    public void delete(String publicId) throws IOException {
-        cloudinary.uploader().destroy(publicId, Map.of());
-    }
-
-    public String buildUrl(String publicId) {
-        return cloudinary.url()
-                .transformation(new Transformation().width(800).crop("limit"))
-                .generate(publicId);
+    public String uploadPrivate(MultipartFile file, String folder) throws IOException {
+        validate(file);
+        Map<String, Object> options = Map.of(
+                "folder", folder,
+                "type", "authenticated",
+                "resource_type", "image",
+                "unique_filename", true,
+                "overwrite", false
+        );
+        Map result = cloudinary.uploader().upload(file.getBytes(), options);
+        return (String) result.get("public_id");
     }
 
     private void validate(MultipartFile file) {
@@ -49,5 +52,23 @@ public class CloudinaryService {
             throw new IllegalArgumentException("Format not allowed: " + file.getContentType());
         if (file.getSize() > MAX_SIZE)
             throw new IllegalArgumentException("File exceeds 5MB limit");
+    }
+
+    public String buildUrl(String publicId) {
+        return cloudinary.url()
+                .transformation(new Transformation().width(800).crop("limit"))
+                .generate(publicId);
+    }
+
+    public String buildPrivateUrl(String publicId) {
+        return cloudinary.url()
+                .type("authenticated")
+                .transformation(new Transformation().width(800).crop("limit"))
+                .signed(true)
+                .generate(publicId);
+    }
+
+    public void delete(String publicId) throws IOException {
+        cloudinary.uploader().destroy(publicId, Map.of());
     }
 }

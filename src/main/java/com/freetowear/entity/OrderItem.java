@@ -9,9 +9,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @Entity
-@Table(name = "order_item", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"order_id", "product_id", "variation_id"})
-})
+@Table(name = "order_item")
 public class OrderItem extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -25,6 +23,12 @@ public class OrderItem extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "variation_id", nullable = false)
     private ProductVariation productVariation;
+
+    @Column
+    private String description;
+
+    @Column
+    private String customerCustomizationId;
 
     @Column(nullable = false)
     private Integer quantity;

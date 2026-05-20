@@ -1,13 +1,16 @@
 # FreeToWear
+![Java](https://img.shields.io/badge/Java-21-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.5.7-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)
 ![Spring MVC](https://img.shields.io/badge/Spring_MVC-6DB33F?style=for-the-badge&logo=spring&logoColor=white)
 ![Thymeleaf](https://img.shields.io/badge/Thymeleaf-005F0F?style=for-the-badge&logo=thymeleaf&logoColor=white)
 ![Spring Data JPA](https://img.shields.io/badge/Spring_Data_JPA-6DB33F?style=for-the-badge&logo=spring&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
-![Java](https://img.shields.io/badge/Java-21-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
-[![Issues](https://img.shields.io/github/issues/almeidafm/freetowear?style=for-the-badge)](https://github.com/almeidafm/freetowear/issues)
+![Cloudinary](https://img.shields.io/badge/Cloudinary-3448C5?style=for-the-badge&logo=cloudinary&logoColor=white)
+![Stars](https://img.shields.io/github/stars/almeidafm/freetowear?style=for-the-badge&color=%23FFD700)
+![Forks](https://img.shields.io/github/forks/almeidafm/freetowear?style=for-the-badge)
+![Issues](https://img.shields.io/github/issues/almeidafm/freetowear?style=for-the-badge&color=%23FF0000)
 
 ## Sumário
 - [Estrutura da Aplicação](#estrutura-da-aplicação)
@@ -41,8 +44,8 @@ Requisição HTTP → Controller → Service → Repository → MySQL
 - [spring-boot-starter-security](https://spring.io/projects/spring-security) `3.5.7`
 - [lombok](https://projectlombok.org) `1.18.34`
 - [ulid-creator](https://github.com/f4b6a3/ulid-creator) `5.2.3`
-
-> As versões do Spring Boot são gerenciadas pelo parent `spring-boot-starter-parent:3.5.7`. O projeto utiliza Java 21.
+- [cloudinary-http5](https://cloudinary.com/documentation/java_integration) `2.0.0`
+- [cloudinary-taglib](https://cloudinary.com/documentation/java_integration) `2.0.0`
 
 ---
 
@@ -58,6 +61,8 @@ Requisição HTTP → Controller → Service → Repository → MySQL
 - Fluxo de criação e finalização de pedidos
 - Aplicação de cupons de desconto nos pedidos
 - Seleção da forma de pagamento durante a compra
+- Upload e gerenciamento de imagens dos produtos
+- Upload de imagens personalizadas pelo cliente com URL assinada e protegida
   
 ---
 
@@ -67,7 +72,6 @@ As funcionalidades abaixo ainda estão em desenvolvimento e serão adicionadas n
 - Implementação de autenticação e autorização de usuários
 - Controle de sessão e persistência de login
 - Validação de acesso aos recursos do sistema
-- Upload e gerenciamento de imagens dos produtos
 - Proteção contra automações e abuso de requisições
 - Limitação de requisições em endpoints sensíveis
 - Centralização do tratamento de erros da aplicação
