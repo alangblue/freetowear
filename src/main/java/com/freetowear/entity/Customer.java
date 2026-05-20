@@ -10,11 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-@Table(name = "customer",
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames = "email"),
-                @UniqueConstraint(columnNames = "cpf")
-        })
+@Table(name = "customer")
 public class Customer extends BaseEntity {
 
     @Column(nullable = false, length = 150)

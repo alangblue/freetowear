@@ -44,13 +44,6 @@ public class AccountService {
         customerRepository.save(customer);
     }
 
-    public void deleteAccount(String id) {
-        customerRepository.findById(id).ifPresent(customer -> {
-            customer.setActive(false);
-            customerRepository.save(customer);
-        });
-    }
-
     public void updateAccount(String id, UpdateAccountRequest request) {
         customerRepository.findById(id).ifPresent(customer -> {
             if (request.getName() != null && !request.getName().isEmpty())
