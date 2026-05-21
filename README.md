@@ -3,6 +3,7 @@
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.5.7-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)
 ![Spring MVC](https://img.shields.io/badge/Spring_MVC-6DB33F?style=for-the-badge&logo=spring&logoColor=white)
 ![Thymeleaf](https://img.shields.io/badge/Thymeleaf-005F0F?style=for-the-badge&logo=thymeleaf&logoColor=white)
+![Spring Security](https://img.shields.io/badge/Spring_Security-6DB33F?style=for-the-badge&logo=springsecurity&logoColor=white)
 ![Spring Data JPA](https://img.shields.io/badge/Spring_Data_JPA-6DB33F?style=for-the-badge&logo=spring&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
@@ -38,12 +39,14 @@ Requisição HTTP → Controller → Service → Repository → MySQL
 
 - [spring-boot-starter-web](https://spring.io/projects/spring-boot) `3.5.7`
 - [spring-boot-starter-thymeleaf](https://www.thymeleaf.org) `3.5.7`
+- [thymeleaf-extras-springsecurity6](https://github.com/thymeleaf/thymeleaf-extras-springsecurity) `3.5.7`
+- [spring-boot-starter-security](https://spring.io/projects/spring-security) `3.5.7`
 - [spring-boot-starter-validation](https://hibernate.org/validator) `3.5.7`
 - [spring-boot-starter-data-jpa](https://spring.io/projects/spring-data-jpa) `3.5.7`
 - [mysql-connector-j](https://dev.mysql.com/downloads/connector/j) `9.4.0`
-- [spring-boot-starter-security](https://spring.io/projects/spring-security) `3.5.7`
 - [lombok](https://projectlombok.org) `1.18.34`
 - [ulid-creator](https://github.com/f4b6a3/ulid-creator) `5.2.3`
+- [spring-dotenv](https://github.com/paulschwarz/spring-dotenv) `4.0.0`
 - [cloudinary-http5](https://cloudinary.com/documentation/java_integration) `2.0.0`
 - [cloudinary-taglib](https://cloudinary.com/documentation/java_integration) `2.0.0`
 
@@ -54,6 +57,8 @@ Requisição HTTP → Controller → Service → Repository → MySQL
 - Cadastro e gerenciamento da conta do cliente
 - Gerenciamento de endereços vinculados à conta
 - Identificadores públicos seguros com ULID
+- Autenticação de usuários com sessão HTTP e Spring Security
+- Autorização por perfil de acesso (ROLE_USER, ROLE_ADMIN)
 - Criptografia de senhas com BCrypt
 - Catálogo de produtos organizado por categorias
 - Gerenciamento de produtos, categorias e cupons
@@ -69,7 +74,6 @@ Requisição HTTP → Controller → Service → Repository → MySQL
 ## Próximas Versões
 As funcionalidades abaixo ainda estão em desenvolvimento e serão adicionadas nas próximas versões:
 
-- Implementação de autenticação e autorização de usuários
 - Controle de sessão e persistência de login
 - Validação de acesso aos recursos do sistema
 - Proteção contra automações e abuso de requisições
