@@ -2,9 +2,9 @@ package com.freetowear.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -13,25 +13,36 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final int SESSIONS_PER_USER = 3;
-
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll()
+                        .requestMatchers(HttpMethod.GET, "/", "/product", "/product/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/product/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/product/**").hasRole("ADMIN")
+                        .requestMatchers("/category/**", "/coupon/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/account/register").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/account/register").permitAll()
+                        .requestMatchers("/css/**", "/js/**").permitAll()
+                        .anyRequest().authenticated()
                 )
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-                        .maximumSessions(SESSIONS_PER_USER)
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/", true)
+                        .failureUrl("/login?error=true")
+                        .permitAll()
                 )
-                .csrf(csrf -> csrf.disable());
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login?logout=true")
+                        .permitAll()
+                );
 
         return http.build();
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(10);
+        return new BCryptPasswordEncoder();
     }
 }

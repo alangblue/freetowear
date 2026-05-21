@@ -1,4 +1,4 @@
-package com.freetowear.security;
+package com.freetowear.infra.security;
 
 import com.freetowear.entity.Customer;
 import com.freetowear.repository.CustomerRepository;
