@@ -1,9 +1,9 @@
 package com.freetowear.entity;
 
+import com.freetowear.enums.Role;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -28,7 +28,11 @@ public class Customer extends BaseEntity {
     @Column(length = 20)
     private String phone;
 
+    @Column
     private LocalDate birthDate;
+
+    @Column
+    private Role role = Role.ROLE_USER;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
